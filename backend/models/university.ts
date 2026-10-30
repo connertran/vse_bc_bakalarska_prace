@@ -34,6 +34,24 @@ class University {
     return university;
   }
 
+  /** Return one university by email domain, or 404 when the email domain does not exist. */
+  static async findByEmailDomain(email_domain: string) {
+    const result = await db.query(
+      `SELECT id, name, email_domain
+       FROM university
+       WHERE email_domain = $1`,
+      [email_domain],
+    );
+    const university = result.rows[0];
+
+    if (!university)
+      throw new NotFoundError(
+        `No university with email domain: ${email_domain}`,
+      );
+
+    return university;
+  }
+
   /** Insert a university and return the saved row. */
   static async create(data: UniversityData) {
     const duplicateCheck = await db.query(

@@ -21,7 +21,15 @@ Run from the project root:
 psql -U postgres -d tutoring_db -v ON_ERROR_STOP=1 --single-transaction -f backend/database_SQL/schema.sql
 ```
 
-## 4. Start backend
+## 4. Load seed data
+
+Run from the project root:
+
+```bash
+psql -U postgres -d tutoring_db -v ON_ERROR_STOP=1 --single-transaction -f backend/database_SQL/seed.sql
+```
+
+## 5. Start backend
 
 ```bash
 cd backend
