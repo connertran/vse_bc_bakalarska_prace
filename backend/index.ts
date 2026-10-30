@@ -9,6 +9,7 @@ import express, {
 } from "express";
 
 import authRouter from "./auth/auth";
+import universityRouter from "./routes/university";
 // using cors to communicate with the front-end
 import cors from "cors";
 import morgan from "morgan";
@@ -21,7 +22,7 @@ app.use(express.json());
 app.use(morgan("tiny"));
 
 app.use("/auth", authRouter);
-
+app.use("/universities", universityRouter);
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
   return next(new NotFoundError());

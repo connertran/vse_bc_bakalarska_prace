@@ -42,7 +42,7 @@ CREATE TABLE course
      name         VARCHAR(155)  NOT NULL , 
      description  VARCHAR(255) , 
      syllabus_URL VARCHAR(255)  NOT NULL , 
-     is_active    BOOLEAN  NOT NULL , 
+     is_active    BOOLEAN  NOT NULL DEFAULT TRUE, 
      faculty_ID   BIGINT  NOT NULL 
     ) 
 ;
@@ -104,7 +104,7 @@ CREATE TABLE message
     ( 
      ID      BIGINT GENERATED ALWAYS AS IDENTITY  NOT NULL , 
      content VARCHAR(4000)  NOT NULL , 
-     is_read BOOLEAN  NOT NULL , 
+     is_read BOOLEAN  NOT NULL DEFAULT FALSE, 
      sent_at TIMESTAMP WITH TIME ZONE  NOT NULL , 
      chat_ID BIGINT  NOT NULL , 
      user_ID BIGINT  NOT NULL 
@@ -120,7 +120,7 @@ CREATE TABLE notification
      type       VARCHAR(20)  NOT NULL , 
      content    VARCHAR(255)  NOT NULL , 
      created_at TIMESTAMP WITH TIME ZONE  NOT NULL , 
-     is_read    BOOLEAN  NOT NULL , 
+     is_read    BOOLEAN  NOT NULL DEFAULT FALSE, 
      user_ID    BIGINT  NOT NULL 
     ) 
 ;
@@ -223,17 +223,17 @@ CREATE TABLE "user"
      name                     VARCHAR(150)  NOT NULL , 
      email                    VARCHAR(255)  NOT NULL , 
      alt_email                VARCHAR(255)  NOT NULL , 
-     email_verified           BOOLEAN  NOT NULL , 
-     alt_email_verified       BOOLEAN  NOT NULL , 
+     email_verified           BOOLEAN  NOT NULL DEFAULT FALSE, 
+     alt_email_verified       BOOLEAN  NOT NULL DEFAULT FALSE, 
      hashed_password          VARCHAR(255)  NOT NULL , 
-     role                     VARCHAR(30)  NOT NULL , 
+     role                     VARCHAR(30)  NOT NULL DEFAULT 'user', 
      tel_number               VARCHAR(20) , 
      profile_pic              VARCHAR(2048) , 
      bio                      VARCHAR(2000) , 
      year_of_study            SMALLINT , 
-     email_visible            BOOLEAN  NOT NULL , 
-     alt_email_visible        BOOLEAN  NOT NULL , 
-     tel_number_visible       BOOLEAN  NOT NULL , 
+     email_visible            BOOLEAN  NOT NULL DEFAULT TRUE, 
+     alt_email_visible        BOOLEAN  NOT NULL DEFAULT TRUE, 
+     tel_number_visible       BOOLEAN  NOT NULL DEFAULT TRUE, 
      hourly_rate              NUMERIC(10,2) , 
      verify_token             VARCHAR(255) , 
      verify_token_expire      TIMESTAMP WITH TIME ZONE , 
@@ -259,7 +259,7 @@ CREATE TABLE user_course
      course_status            VARCHAR(155)  NOT NULL , 
      confidence_in_explaining SMALLINT  NOT NULL , 
      fav_topics               VARCHAR(255) , 
-     notification_enabled     BOOLEAN  NOT NULL , 
+     notification_enabled     BOOLEAN  NOT NULL DEFAULT TRUE, 
      user_ID                  BIGINT  NOT NULL , 
      course_ID                BIGINT  NOT NULL 
     ) 
