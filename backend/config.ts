@@ -5,7 +5,7 @@ import "dotenv/config";
 
 import "colors";
 
-const SECRET_KEY = process.env.SECRET_KEY || "secret-key";
+export const SECRET_KEY = process.env.SECRET_KEY || "secret-key";
 
 const PORT = Number(process.env.PORT) || 3001;
 

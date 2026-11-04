@@ -4,16 +4,17 @@ import { Router } from "express";
 import express from "express";
 import { BadRequestError } from "../expressError";
 import User from "../models/user";
+import { ensureLoggedIn } from "../middleware/auth";
 const router = Router();
 
 /** GET /users/ => {users: [{id, name, email, alt_email, tel_number, bio, year_of_study, university_ID, role, hourly_rate}, ...]}
  *
  * Returns list of all users.
  *
- * Authorization required: none
+ * Authorization required: logged in
  *
  */
-router.get("/", async function (req, res, next) {
+router.get("/", ensureLoggedIn, async function (req, res, next) {
   try {
     const users = await User.listAllUsers();
     return res.json({ users });

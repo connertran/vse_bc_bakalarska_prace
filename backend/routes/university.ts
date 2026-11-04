@@ -7,6 +7,7 @@ import University from "../models/university";
 import universityDataSchema from "../schemas/university/universityData.json";
 import jsonschema from "jsonschema";
 import { Validator, type ValidationError } from "jsonschema";
+import { ensureAdmin } from "../middleware/auth";
 const router = Router();
 
 /** GET /universities/ => {universities: [{id, name, email_domain}, ...]}
@@ -45,10 +46,10 @@ router.get("/:id", async function (req, res, next) {
  *
  * Adds a new university.
  *
- * Authorization required: admin (TODO: add this later)
+ * Authorization required: admin
  *
  */
-router.post("/", async function (req, res, next) {
+router.post("/", ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, universityDataSchema);
     if (!validator.valid) {
@@ -68,10 +69,10 @@ router.post("/", async function (req, res, next) {
  *
  * Updates a university.
  *
- * Authorization required: admin (TODO: add this later)
+ * Authorization required: admin
  *
  */
-router.put("/:id", async function (req, res, next) {
+router.put("/:id", ensureAdmin, async function (req, res, next) {
   try {
     const validator = jsonschema.validate(req.body, universityDataSchema);
     if (!validator.valid) {
@@ -91,10 +92,10 @@ router.put("/:id", async function (req, res, next) {
  *
  * Deletes a university.
  *
- * Authorization required: admin (TODO: add this later)
+ * Authorization required: admin
  *
  */
-router.delete("/:id", async function (req, res, next) {
+router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
     const university = await University.delete(Number(req.params.id));
     return res.json({ deleted: university.id });

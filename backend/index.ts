@@ -15,12 +15,14 @@ import userRouter from "./routes/user";
 import cors from "cors";
 import morgan from "morgan";
 import { NotFoundError } from "./expressError";
+import { authenticateJWT } from "./middleware/auth";
 
 const app = express();
 
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
+app.use(authenticateJWT);
 
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
