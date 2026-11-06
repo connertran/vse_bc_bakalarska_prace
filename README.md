@@ -35,3 +35,28 @@ psql -U postgres -d tutoring_db -v ON_ERROR_STOP=1 --single-transaction -f backe
 cd backend
 npm start
 ```
+
+# Frontend Setup
+
+## 1. Install dependencies
+
+```bash
+cd frontend
+npm install
+```
+
+## 2. Configure environment variables
+
+Create a `.env` file inside the `frontend` directory and add:
+
+```env
+VITE_BASE_URL=http://localhost:3001
+```
+
+This URL points to the backend API. Backend URL when deploying is different
+
+## 3. Start frontend
+
+```bash
+npm run dev
+```
