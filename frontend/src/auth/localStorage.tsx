@@ -29,4 +29,16 @@ function getTokenFromLocalStorage(): StoredAuthToken | null {
   }
 }
 
-export { saveTokenToLocalStorage, getTokenFromLocalStorage };
+function removeTokenFromLocalStorage() {
+  try {
+    localStorage.removeItem("authToken");
+  } catch (error) {
+    console.error("Failed to remove token from local storage:", error);
+  }
+}
+
+export {
+  saveTokenToLocalStorage,
+  getTokenFromLocalStorage,
+  removeTokenFromLocalStorage,
+};

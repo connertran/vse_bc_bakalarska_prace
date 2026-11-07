@@ -1,10 +1,12 @@
 import axios from "axios";
 import type { UserLoginData, UserRegisterData } from "./types";
+import { getTokenFromLocalStorage } from "../auth/localStorage";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
 
 class API {
-  static token: string | null = null;
+  // restore the saved token on page load so a refresh keeps the user logged in
+  static token: string | null = getTokenFromLocalStorage()?.token ?? null;
 
   static async request(endpoint: string, data = {}, method = "get") {
     console.debug("API Call:", endpoint, data, method);
@@ -27,7 +29,8 @@ class API {
   // Signup for site
   static async signup(data: UserRegisterData) {
     let res = await this.request(`auth/register`, data, "post");
-    return res.newUser;
+    // backend responds with { user: {..., token} }
+    return res.user;
   }
 
   // Login for site
@@ -36,5 +39,4 @@ class API {
     return res.user;
   }
 }
-
 export default API;
