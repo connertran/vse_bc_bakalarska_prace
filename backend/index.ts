@@ -10,6 +10,7 @@ import express, {
 
 import authRouter from "./auth/auth";
 import universityRouter from "./routes/university";
+import facultyRouter from "./routes/faculty";
 import userRouter from "./routes/user";
 // using cors to communicate with the front-end
 import cors from "cors";
@@ -27,6 +28,7 @@ app.use(authenticateJWT);
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/universities", universityRouter);
+app.use("/faculties", facultyRouter);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
