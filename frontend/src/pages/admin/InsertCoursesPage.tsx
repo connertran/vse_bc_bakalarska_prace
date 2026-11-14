@@ -5,9 +5,15 @@ import {
   type FormEvent,
 } from "react";
 import { extractCourses, htmlToMarkdown } from "./extractlink";
+import CoursesList from "./CoursesList";
+import type { CourseInsertData } from "../../API/types";
+
+type Extraction = { id: number; courses: CourseInsertData[] };
 
 function InsertCoursesPage() {
   const [text, setText] = useState("");
+  // store the courses after the extraction
+  const [extraction, setExtraction] = useState<Extraction | null>(null);
 
   function handleChange(evt: ChangeEvent<HTMLTextAreaElement>) {
     setText(evt.target.value);
@@ -31,8 +37,10 @@ function InsertCoursesPage() {
 
   function handleSubmit(evt: FormEvent<HTMLFormElement>) {
     evt.preventDefault();
-    const courses = extractCourses(text);
-    console.log(courses);
+    // use the date value for the unique id
+    // new id after every extraction
+    // rerender the state... the CoursesList component will rerender with the new id
+    setExtraction({ id: Date.now(), courses: extractCourses(text) });
   }
 
   return (
@@ -52,6 +60,13 @@ function InsertCoursesPage() {
         />
         <button type="submit">Extract</button>
       </form>
+
+      {extraction &&
+        (extraction.courses.length > 0 ? (
+          <CoursesList key={extraction.id} courses={extraction.courses} />
+        ) : (
+          <p role="status">No courses found!</p>
+        ))}
     </>
   );
 }

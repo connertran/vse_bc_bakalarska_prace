@@ -1,5 +1,9 @@
 import axios from "axios";
-import type { UserLoginData, UserRegisterData } from "./types";
+import type {
+  UserLoginData,
+  UserRegisterData,
+  CourseInsertData,
+} from "./types";
 import { getTokenFromLocalStorage } from "../auth/localStorage";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL || "http://localhost:3001";
@@ -37,6 +41,11 @@ class API {
   static async login(data: UserLoginData) {
     let res = await this.request(`auth/login`, data, "post");
     return res.user;
+  }
+
+  static async insertCourse(data: CourseInsertData) {
+    let res = await this.request(`courses`, data, "post");
+    return res.course;
   }
 }
 export default API;

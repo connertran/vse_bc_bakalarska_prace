@@ -1,0 +1,23 @@
+/* Layout only for the extracted courses list, no colors for now */
+
+.courses-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1rem;
+  margin-top: 2rem;
+}
+
+.courses-list-table {
+  border-collapse: collapse;
+  width: 100%;
+}
+
+.courses-list-table th,
+.courses-list-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: top;
+  border-bottom-width: 1px;
+  border-bottom-style: solid;
+}

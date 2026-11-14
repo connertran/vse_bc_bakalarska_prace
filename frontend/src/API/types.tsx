@@ -13,4 +13,12 @@ type UserRegisterData = {
   year_of_study: number;
 };
 
-export type { UserLoginData, UserRegisterData };
+type CourseInsertData = {
+  code: string;
+  name: string;
+  semester: string;
+  faculty: string;
+  url: string;
+};
+
+export type { UserLoginData, UserRegisterData, CourseInsertData };
