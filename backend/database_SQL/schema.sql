@@ -228,7 +228,7 @@ CREATE TABLE "user"
      hashed_password          VARCHAR(255)  NOT NULL , 
      role                     VARCHAR(30)  NOT NULL DEFAULT 'user', 
      tel_number               VARCHAR(20) , 
-     profile_pic              VARCHAR(2048) , 
+     profile_pic              VARCHAR(2048) DEFAULT 'https://godwinanywar.com/wp-content/uploads/2023/07/22-223863_no-avatar-png-circle-transparent-png.png', 
      bio                      VARCHAR(2000) , 
      year_of_study            SMALLINT , 
      email_visible            BOOLEAN  NOT NULL DEFAULT TRUE, 

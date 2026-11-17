@@ -4,6 +4,7 @@ import LoginForm from "./auth/LoginForm";
 import RegisterForm from "./auth/RegisterForm";
 import Navbar from "./components/Navbar";
 import InsertCoursesPage from "./pages/admin/InsertCoursesPage";
+import Portfolio from "./pages/portfolio/Portfolio";
 
 function App({ router: RouterComponent = BrowserRouter }) {
   return (
@@ -13,7 +14,7 @@ function App({ router: RouterComponent = BrowserRouter }) {
         <Route path="/login" element={<LoginForm />} />
         <Route path="/register" element={<RegisterForm />} />
         <Route path="/admin/insert-courses" element={<InsertCoursesPage />} />
-
+        <Route path="/portfolio" element={<Portfolio />} />
         <Route path="/" element={<Home />} />
       </Routes>
     </RouterComponent>

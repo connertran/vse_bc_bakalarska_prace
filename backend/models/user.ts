@@ -96,14 +96,32 @@ class User {
 
   static async findById(id: number) {
     const result = await db.query(
-      `SELECT id, name, email, alt_email, tel_number, bio, year_of_study, university_ID, role, hourly_rate
+      `SELECT id, name, email, email_verified, alt_email, alt_email_verified, tel_number, bio, year_of_study, university_ID, role, hourly_rate
        FROM "user"
        WHERE id = $1`,
       [id],
     );
-    const user = result.rows[0];
-    if (!user) throw new NotFoundError(`No user with id: ${id}`);
-    return user;
+    const row = result.rows[0];
+    if (!row) throw new NotFoundError(`No user with id: ${id}`);
+
+    // remove the university_id from the user object
+    const { university_id, ...user } = row;
+
+    // the user may not have a university
+    const university = university_id
+      ? await University.findById(university_id)
+      : null;
+
+    const facultiesResult = await db.query(
+      `SELECT faculty.id, faculty.name
+       FROM faculty
+       JOIN user_faculty ON user_faculty.faculty_ID = faculty.id
+       WHERE user_faculty.user_ID = $1
+       ORDER BY faculty.name`,
+      [id],
+    );
+
+    return { ...user, university, faculties: facultiesResult.rows };
   }
 }
 

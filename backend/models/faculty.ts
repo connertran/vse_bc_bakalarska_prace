@@ -3,6 +3,7 @@
 import db from "../db";
 import { BadRequestError, NotFoundError } from "../expressError";
 import University from "./university";
+import User from "./user";
 
 type FacultyData = {
   name: string;
@@ -30,6 +31,53 @@ class Faculty {
 
     if (!faculty) throw new NotFoundError(`No faculty with name: ${name}`);
 
+    return faculty;
+  }
+
+  static async findById(id: number) {
+    const result = await db.query(
+      `SELECT id, name, university_ID
+       FROM faculty
+       WHERE id = $1`,
+      [id],
+    );
+    const faculty = result.rows[0];
+
+    if (!faculty) throw new NotFoundError(`No faculty with id: ${id}`);
+
+    return faculty;
+  }
+
+  static async addUserToFaculty(userId: number, facultyId: number) {
+    // 404 error...user or faculty does not exist
+    const user = await User.findById(userId);
+    const faculty = await Faculty.findById(facultyId);
+
+    // user cant join a faculty that is not in their university
+    if (user.university?.id !== faculty.university_id) {
+      throw new BadRequestError(
+        `Faculty ${faculty.name} is not part of the user's university`,
+      );
+    }
+
+    const duplicateCheck = await db.query(
+      `SELECT user_ID
+       FROM user_faculty
+       WHERE user_ID = $1 AND faculty_ID = $2`,
+      [userId, facultyId],
+    );
+
+    if (duplicateCheck.rows[0]) {
+      throw new BadRequestError(
+        `User ${userId} is already in faculty ${faculty.name}`,
+      );
+    }
+
+    await db.query(
+      `INSERT INTO user_faculty (user_ID, faculty_ID)
+       VALUES ($1, $2)`,
+      [userId, facultyId],
+    );
     return faculty;
   }
 

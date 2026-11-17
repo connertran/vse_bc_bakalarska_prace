@@ -23,4 +23,22 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
+/** GET /users/:id => {user: {id, name, email, email_verified, alt_email, alt_email_verified, tel_number, bio, year_of_study, role, hourly_rate, university: {id, name, email_domain}, faculties: [{id, name}, ...]}}
+ *
+ * Authorization required: logged in
+ *
+ */
+router.get("/:id", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const id = Number(req.params.id);
+    if (!Number.isInteger(id) || id < 1)
+      throw new BadRequestError("User id must be a positive integer");
+
+    const user = await User.findById(id);
+    return res.json({ user });
+  } catch (e) {
+    return next(e);
+  }
+});
+
 export default router;
