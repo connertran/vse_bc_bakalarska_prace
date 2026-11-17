@@ -8,6 +8,7 @@ import universityDataSchema from "../schemas/university/universityData.json";
 import jsonschema from "jsonschema";
 import { Validator, type ValidationError } from "jsonschema";
 import { ensureAdmin } from "../middleware/auth";
+import { parseId } from "./helperFunctions";
 const router = Router();
 
 /** GET /universities/ => {universities: [{id, name, email_domain}, ...]}
@@ -35,7 +36,9 @@ router.get("/", async function (req, res, next) {
  */
 router.get("/:id", async function (req, res, next) {
   try {
-    const university = await University.findById(Number(req.params.id));
+    const university = await University.findById(
+      parseId(req.params.id, "University id"),
+    );
     return res.json({ university });
   } catch (e) {
     return next(e);
@@ -81,7 +84,10 @@ router.put("/:id", ensureAdmin, async function (req, res, next) {
         .join(", ");
       throw new BadRequestError(errs);
     }
-    const university = await University.update(Number(req.params.id), req.body);
+    const university = await University.update(
+      parseId(req.params.id, "University id"),
+      req.body,
+    );
     return res.json({ university });
   } catch (e) {
     return next(e);
@@ -97,7 +103,9 @@ router.put("/:id", ensureAdmin, async function (req, res, next) {
  */
 router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
-    const university = await University.delete(Number(req.params.id));
+    const university = await University.delete(
+      parseId(req.params.id, "University id"),
+    );
     return res.json({ deleted: university.id });
   } catch (e) {
     return next(e);

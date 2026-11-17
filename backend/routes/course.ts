@@ -6,6 +6,7 @@ import Course from "../models/course";
 import courseDataSchema from "../schemas/course/courseData.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin } from "../middleware/auth";
+import { parseId } from "./helperFunctions";
 const router = Router();
 
 /** GET /courses/ => {courses: [{id, course_code, name, description, syllabus_URL, is_active, faculty_ID}, ...]}
@@ -33,7 +34,7 @@ router.get("/", async function (req, res, next) {
  */
 router.get("/:id", async function (req, res, next) {
   try {
-    const course = await Course.findById(Number(req.params.id));
+    const course = await Course.findById(parseId(req.params.id, "Course id"));
     return res.json({ course });
   } catch (e) {
     return next(e);
@@ -79,7 +80,10 @@ router.put("/:id", ensureAdmin, async function (req, res, next) {
         .join(", ");
       throw new BadRequestError(errs);
     }
-    const course = await Course.update(Number(req.params.id), req.body);
+    const course = await Course.update(
+      parseId(req.params.id, "Course id"),
+      req.body,
+    );
     return res.json({ course });
   } catch (e) {
     return next(e);
@@ -95,7 +99,7 @@ router.put("/:id", ensureAdmin, async function (req, res, next) {
  */
 router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
-    const course = await Course.delete(Number(req.params.id));
+    const course = await Course.delete(parseId(req.params.id, "Course id"));
     return res.json({ deleted: course.id });
   } catch (e) {
     return next(e);

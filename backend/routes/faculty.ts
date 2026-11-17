@@ -7,6 +7,7 @@ import User from "../models/user";
 import facultyDataSchema from "../schemas/faculty/facultyData.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin, ensureLoggedIn } from "../middleware/auth";
+import { parseId } from "./helperFunctions";
 const router = Router();
 
 /** GET /faculties/ => {faculties: [{id, name, university_ID}, ...]}
@@ -51,7 +52,9 @@ router.get("/:name", async function (req, res, next) {
  */
 router.get("/id/:id", async function (req, res, next) {
   try {
-    const faculty = await Faculty.findById(Number(req.params.id));
+    const faculty = await Faculty.findById(
+      parseId(req.params.id, "Faculty id"),
+    );
     return res.json({ faculty });
   } catch (e) {
     return next(e);
@@ -92,17 +95,8 @@ router.post(
   ensureLoggedIn,
   async function (req, res, next) {
     try {
-      const facultyId = Number(req.params.facultyId);
-      const userId = Number(req.params.userId);
-      if (
-        !Number.isInteger(facultyId) ||
-        facultyId < 1 ||
-        !Number.isInteger(userId) ||
-        userId < 1
-      )
-        throw new BadRequestError(
-          "Faculty id and user id must be positive integers",
-        );
+      const facultyId = parseId(req.params.facultyId, "Faculty id");
+      const userId = parseId(req.params.userId, "User id");
 
       const user = await User.findById(userId);
       const isSelf = user.email === res.locals.user.email; // check if the id is owned by the user
@@ -126,7 +120,9 @@ router.post(
  */
 router.delete("/:id", ensureAdmin, async function (req, res, next) {
   try {
-    const faculty = await Faculty.delete(Number(req.params.id));
+    const faculty = await Faculty.delete(
+      parseId(req.params.id, "Faculty id"),
+    );
     return res.json({ deleted: faculty.id });
   } catch (e) {
     return next(e);

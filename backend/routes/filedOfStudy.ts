@@ -7,6 +7,7 @@ import User from "../models/user";
 import fieldOfStudySchema from "../schemas/fieldOfStudy/fieldOfStudy.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin, ensureLoggedIn } from "../middleware/auth";
+import { parseId } from "./helperFunctions";
 const router = Router();
 
 /** GET /fields-of-study/:id => {fieldOfStudy: {id, name, faculty_id}}
@@ -18,10 +19,7 @@ const router = Router();
  */
 router.get("/:id", async function (req, res, next) {
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id < 1)
-      throw new BadRequestError("Field of study id must be a positive integer");
-
+    const id = parseId(req.params.id, "Field of study id");
     const fieldOfStudy = await FieldOfStudy.findById(id);
     return res.json({ fieldOfStudy });
   } catch (e) {
@@ -61,17 +59,11 @@ router.post(
   ensureLoggedIn,
   async function (req, res, next) {
     try {
-      const fieldOfStudyId = Number(req.params.fieldOfStudyId);
-      const userId = Number(req.params.userId);
-      if (
-        !Number.isInteger(fieldOfStudyId) ||
-        fieldOfStudyId < 1 ||
-        !Number.isInteger(userId) ||
-        userId < 1
-      )
-        throw new BadRequestError(
-          "Field of study id and user id must be positive integers",
-        );
+      const fieldOfStudyId = parseId(
+        req.params.fieldOfStudyId,
+        "Field of study id",
+      );
+      const userId = parseId(req.params.userId, "User id");
 
       // user can only change their own fields of study
       const user = await User.findById(userId);

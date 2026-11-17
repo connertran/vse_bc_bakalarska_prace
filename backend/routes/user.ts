@@ -2,9 +2,9 @@
 
 import { Router } from "express";
 import express from "express";
-import { BadRequestError } from "../expressError";
 import User from "../models/user";
 import { ensureLoggedIn } from "../middleware/auth";
+import { parseId } from "./helperFunctions";
 const router = Router();
 
 /** GET /users/ => {users: [{id, name, email, alt_email, tel_number, bio, year_of_study, university_ID, role, hourly_rate}, ...]}
@@ -30,10 +30,7 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
  */
 router.get("/:id", ensureLoggedIn, async function (req, res, next) {
   try {
-    const id = Number(req.params.id);
-    if (!Number.isInteger(id) || id < 1)
-      throw new BadRequestError("User id must be a positive integer");
-
+    const id = parseId(req.params.id, "User id");
     const user = await User.findById(id);
     return res.json({ user });
   } catch (e) {

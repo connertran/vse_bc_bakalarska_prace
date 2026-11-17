@@ -13,6 +13,7 @@ import universityRouter from "./routes/university";
 import facultyRouter from "./routes/faculty";
 import courseRouter from "./routes/course";
 import fieldOfStudyRouter from "./routes/filedOfStudy";
+import reviewRouter from "./routes/review";
 import userRouter from "./routes/user";
 // using cors to communicate with the front-end
 import cors from "cors";
@@ -33,6 +34,7 @@ app.use("/universities", universityRouter);
 app.use("/faculties", facultyRouter);
 app.use("/courses", courseRouter);
 app.use("/fields-of-study", fieldOfStudyRouter);
+app.use("/reviews", reviewRouter);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {
