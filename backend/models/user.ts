@@ -87,7 +87,7 @@ class User {
 
   static async listAllUsers() {
     const result = await db.query(
-      `SELECT id, name, email, alt_email, tel_number, bio, year_of_study, university_ID, role, hourly_rate
+      `SELECT id, name, email, alt_email, tel_number, profile_pic, bio, year_of_study, university_ID, role, hourly_rate
        FROM "user"
        ORDER BY id`,
     );
@@ -96,7 +96,7 @@ class User {
 
   static async findById(id: number) {
     const result = await db.query(
-      `SELECT id, name, email, email_verified, alt_email, alt_email_verified, tel_number, bio, year_of_study, university_ID, role, hourly_rate
+      `SELECT id, name, email, email_verified, alt_email, alt_email_verified, tel_number, profile_pic, bio, year_of_study, university_ID, role, hourly_rate
        FROM "user"
        WHERE id = $1`,
       [id],

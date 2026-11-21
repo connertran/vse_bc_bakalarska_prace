@@ -14,6 +14,7 @@ import facultyRouter from "./routes/faculty";
 import courseRouter from "./routes/course";
 import fieldOfStudyRouter from "./routes/filedOfStudy";
 import reviewRouter from "./routes/review";
+import sessionRouter from "./routes/session";
 import userRouter from "./routes/user";
 // using cors to communicate with the front-end
 import cors from "cors";
@@ -35,6 +36,7 @@ app.use("/faculties", facultyRouter);
 app.use("/courses", courseRouter);
 app.use("/fields-of-study", fieldOfStudyRouter);
 app.use("/reviews", reviewRouter);
+app.use("/sessions", sessionRouter);
 
 /** Handle 404 errors -- this matches everything */
 app.use(function (req, res, next) {

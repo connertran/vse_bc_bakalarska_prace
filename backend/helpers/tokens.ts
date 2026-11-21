@@ -4,6 +4,7 @@ import jwt from "jsonwebtoken";
 import config from "../config";
 
 type User = {
+  id: number;
   name: string;
   email: string;
   alt_email: string;
@@ -19,6 +20,7 @@ function createToken(user: User) {
   // JWT payloads are encoded, not encrypted.
   // Do not store sensitive information in the payload.
   let payload = {
+    id: user.id,
     name: user.name,
     email: user.email,
     alt_email: user.alt_email,

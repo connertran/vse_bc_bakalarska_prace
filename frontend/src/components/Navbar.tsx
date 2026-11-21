@@ -2,6 +2,7 @@ import { Link, useNavigate } from "react-router";
 import API from "../API/api";
 import logout from "../auth/logout";
 import isAdmin from "../auth/isAdmin";
+import getCurrentUserId from "../auth/getCurrentUserId";
 
 function Navbar() {
   const navigate = useNavigate();
@@ -16,7 +17,11 @@ function Navbar() {
   }
 
   function handlePortfolio() {
-    navigate("/portfolio");
+    const userId = getCurrentUserId();
+    if (userId) return navigate(`/portfolio/${userId}`);
+
+    // not logged in user tries to click their own portfolio => log in again
+    handleLogout();
   }
 
   return (

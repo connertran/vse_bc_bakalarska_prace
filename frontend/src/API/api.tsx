@@ -3,6 +3,9 @@ import type {
   UserLoginData,
   UserRegisterData,
   CourseInsertData,
+  UserProfile,
+  UserRating,
+  CompletedSessions,
 } from "./types";
 import { getTokenFromLocalStorage } from "../auth/localStorage";
 
@@ -46,6 +49,26 @@ class API {
   static async insertCourse(data: CourseInsertData) {
     let res = await this.request(`courses`, data, "post");
     return res.course;
+  }
+
+  // Get a user's profile (+ their university and faculties)
+  static async getUser(id: number): Promise<UserProfile> {
+    let res = await this.request(`users/${id}`);
+    return res.user;
+  }
+
+  // Get a user's average rating and # of reviews
+  static async getUserRating(id: number): Promise<UserRating> {
+    let res = await this.request(`reviews/users/${id}/rating`);
+    return res.rating;
+  }
+
+  // Get # of completed sessions of a user
+  static async getUserCompletedSessions(
+    id: number,
+  ): Promise<CompletedSessions> {
+    let res = await this.request(`sessions/users/${id}/completed`);
+    return res.completed;
   }
 }
 export default API;

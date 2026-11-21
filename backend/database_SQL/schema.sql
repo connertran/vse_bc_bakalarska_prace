@@ -169,7 +169,7 @@ CREATE TABLE session_event
      location_preference  VARCHAR(20)  NOT NULL , 
      address              VARCHAR(20) , 
      language             VARCHAR(20) , 
-     status               VARCHAR(20)  NOT NULL , 
+     status               VARCHAR(20)  NOT NULL , -- pending, confirmed, completed, cancelled
      requester_confirm_at TIMESTAMP WITH TIME ZONE , 
      provider_confirm_at  TIMESTAMP WITH TIME ZONE , 
      completed_at         TIMESTAMP WITH TIME ZONE , 
@@ -186,7 +186,7 @@ ALTER TABLE session_event
 
 CREATE TABLE session_participant 
     ( 
-     role                    VARCHAR(155)  NOT NULL , 
+     role                    VARCHAR(155)  NOT NULL , -- provider, requester
      completion_confirmed_at TIMESTAMP WITH TIME ZONE , 
      user_ID                 BIGINT  NOT NULL , 
      session_event_ID        BIGINT  NOT NULL 

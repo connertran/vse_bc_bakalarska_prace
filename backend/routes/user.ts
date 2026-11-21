@@ -7,7 +7,7 @@ import { ensureLoggedIn } from "../middleware/auth";
 import { parseId } from "./helperFunctions";
 const router = Router();
 
-/** GET /users/ => {users: [{id, name, email, alt_email, tel_number, bio, year_of_study, university_ID, role, hourly_rate}, ...]}
+/** GET /users/ => {users: [{id, name, email, alt_email, tel_number, profile_pic, bio, year_of_study, university_ID, role, hourly_rate}, ...]}
  *
  * Returns list of all users.
  *
@@ -23,7 +23,7 @@ router.get("/", ensureLoggedIn, async function (req, res, next) {
   }
 });
 
-/** GET /users/:id => {user: {id, name, email, email_verified, alt_email, alt_email_verified, tel_number, bio, year_of_study, role, hourly_rate, university: {id, name, email_domain}, faculties: [{id, name}, ...]}}
+/** GET /users/:id => {user: {id, name, email, email_verified, alt_email, alt_email_verified, tel_number, profile_pic, bio, year_of_study, role, hourly_rate, university: {id, name, email_domain}, faculties: [{id, name}, ...]}}
  *
  * Authorization required: logged in
  *

@@ -21,4 +21,42 @@ type CourseInsertData = {
   url: string;
 };
 
-export type { UserLoginData, UserRegisterData, CourseInsertData };
+// GET /users/:id
+type UserProfile = {
+  id: number;
+  name: string;
+  email: string;
+  email_verified: boolean;
+  alt_email: string | null;
+  alt_email_verified: boolean;
+  tel_number: string | null;
+  profile_pic: string;
+  bio: string | null;
+  year_of_study: number | null;
+  role: string;
+  hourly_rate: number | null;
+  university: { id: number; name: string; email_domain: string } | null;
+  faculties: { id: number; name: string }[];
+};
+
+// GET /reviews/users/:userId/rating
+type UserRating = {
+  average: number | null;
+  count: number;
+};
+
+// GET /sessions/users/:userId/completed
+type CompletedSessions = {
+  as_requester: string;
+  as_provider: string;
+  total: string;
+};
+
+export type {
+  UserLoginData,
+  UserRegisterData,
+  CourseInsertData,
+  UserProfile,
+  UserRating,
+  CompletedSessions,
+};
