@@ -7,6 +7,7 @@ import courseDataSchema from "../schemas/course/courseData.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin } from "../middleware/auth";
 import { parseId } from "./helperFunctions";
+import { ensureLoggedIn } from "../middleware/auth";
 const router = Router();
 
 /** GET /courses/ => {courses: [{id, course_code, name, description, syllabus_URL, is_active, faculty_ID}, ...]}
@@ -19,6 +20,24 @@ const router = Router();
 router.get("/", async function (req, res, next) {
   try {
     const courses = await Course.findAll();
+    return res.json({ courses });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+/** GET /courses/user/:id => {courses: [{id, course_code, name, syllabus_URL, course_status,
+ *                                        confidence_in_explaining, fav_topics, notification_enabled}, ...]}
+ *
+ *
+ * Authorization required: logged in
+ *
+ */
+router.get("/user/:id", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const courses = await Course.findAllByUserId(
+      parseId(req.params.id, "User id"),
+    );
     return res.json({ courses });
   } catch (e) {
     return next(e);

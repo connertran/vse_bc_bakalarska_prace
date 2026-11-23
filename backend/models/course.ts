@@ -3,6 +3,7 @@
 import db from "../db";
 import { BadRequestError, NotFoundError } from "../expressError";
 import Faculty from "./faculty";
+import User from "./user";
 
 type CourseData = {
   code: string; // course.course_code
@@ -20,6 +21,29 @@ class Course {
     const result = await db.query(
       `SELECT ${COURSE_COLUMNS}
        FROM course`,
+    );
+    return result.rows;
+  }
+
+  /** Find all courses of a user by ID**/
+  static async findAllByUserId(userId: number) {
+    // existence check
+    await User.findById(userId);
+
+    const result = await db.query(
+      `SELECT c.id,
+              c.course_code,
+              c.name,
+              c.syllabus_URL,
+              uc.course_status,
+              uc.confidence_in_explaining,
+              uc.fav_topics,
+              uc.notification_enabled
+       FROM user_course uc
+       JOIN course c ON c.id = uc.course_ID
+       WHERE uc.user_ID = $1
+       ORDER BY c.name`,
+      [userId],
     );
     return result.rows;
   }
