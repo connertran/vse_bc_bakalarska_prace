@@ -3,18 +3,21 @@ import { useParams } from "react-router";
 import API from "../../API/api";
 import type {
   CompletedSessions,
+  UserCourse,
   UserProfile,
   UserRating,
 } from "../../API/types";
 import getCurrentUserId from "../../auth/getCurrentUserId";
 import PortfolioHeader from "./PortfolioHeader";
 import PortfolioAbout from "./PortfolioAbout";
+import PortfolioCourses from "./PortfolioCourses";
 import "./Portfolio.css";
 
 type PortfolioData = {
   user: UserProfile;
   rating: UserRating;
   completed: CompletedSessions;
+  courses: UserCourse[];
 };
 
 function Portfolio() {
@@ -38,12 +41,13 @@ function Portfolio() {
 
     async function loadPortfolio(userId: number) {
       try {
-        const [user, rating, completed] = await Promise.all([
+        const [user, rating, completed, courses] = await Promise.all([
           API.getUser(userId),
           API.getUserRating(userId),
           API.getUserCompletedSessions(userId),
+          API.getUserCourses(userId),
         ]);
-        if (!isCancelled) setData({ user, rating, completed });
+        if (!isCancelled) setData({ user, rating, completed, courses });
       } catch (err) {
         if (!isCancelled)
           setError(Array.isArray(err) ? err.join(", ") : "Request failed");
@@ -70,6 +74,7 @@ function Portfolio() {
         isOwnProfile={data.user.id === currentUserId}
       />
       <PortfolioAbout bio={data.user.bio} />
+      <PortfolioCourses courses={data.courses} />
     </main>
   );
 }

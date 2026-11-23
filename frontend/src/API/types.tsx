@@ -52,7 +52,20 @@ type CompletedSessions = {
   total: string;
 };
 
+// GET /courses/user/:id
+type UserCourse = {
+  id: number;
+  course_code: string;
+  name: string;
+  syllabus_url: string;
+  course_status: string;
+  confidence_in_explaining: number;
+  fav_topics: string | null;
+  notification_enabled: boolean;
+};
+
 export type {
+  UserCourse,
   UserLoginData,
   UserRegisterData,
   CourseInsertData,

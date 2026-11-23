@@ -75,6 +75,60 @@
   margin-top: 0;
 }
 
+/* courses section */
+.portfolio-courses {
+  border: 1px solid currentColor;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.portfolio-courses h2 {
+  margin: 0;
+}
+
+.portfolio-courses-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+}
+
+.portfolio-course-card {
+  border: 1px solid currentColor;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.portfolio-course-card p {
+  margin: 0;
+}
+
+.portfolio-course-status {
+  align-self: flex-end;
+  border: 1px solid currentColor;
+  padding: 2px 12px;
+}
+
+.portfolio-courses-more {
+  align-self: flex-end;
+}
+
+@media (min-width: 640px) {
+  .portfolio-courses-list {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 960px) {
+  .portfolio-courses-list {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
 @media (min-width: 768px) {
   .portfolio-header {
     flex-direction: row;

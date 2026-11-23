@@ -13,6 +13,15 @@ type CourseData = {
   url: string; // course.syllabus_URL
 };
 
+type UserCourseData = {
+  user_id: number;
+  course_id: number;
+  course_status: string;
+  confidence_in_explaining: number;
+  fav_topics?: string; // optional
+  notification_enabled: boolean;
+};
+
 // Columns returned for every course
 const COURSE_COLUMNS = `id, course_code, name, description, syllabus_URL, is_active, faculty_ID`;
 
@@ -85,6 +94,45 @@ class Course {
        VALUES ($1, $2, $3, $4, $5)
        RETURNING ${COURSE_COLUMNS}`,
       [data.code, data.name, data.semester, data.url, faculty.id],
+    );
+    return result.rows[0];
+  }
+
+  static async addCourseToUser(data: UserCourseData) {
+    // existence checks
+    await User.findById(data.user_id);
+    await Course.findById(data.course_id);
+
+    const duplicateCheck = await db.query(
+      `SELECT user_ID
+       FROM user_course
+       WHERE user_ID = $1 AND course_ID = $2`,
+      [data.user_id, data.course_id],
+    );
+
+    if (duplicateCheck.rows[0]) {
+      throw new BadRequestError(
+        `User ${data.user_id} already has course ${data.course_id}`,
+      );
+    }
+
+    const result = await db.query(
+      `INSERT INTO user_course (user_ID, course_ID, course_status, confidence_in_explaining, fav_topics, notification_enabled)
+       VALUES ($1, $2, $3, $4, $5, $6)
+       RETURNING user_ID AS user_id,
+                 course_ID AS course_id,
+                 course_status,
+                 confidence_in_explaining,
+                 fav_topics,
+                 notification_enabled`,
+      [
+        data.user_id,
+        data.course_id,
+        data.course_status,
+        data.confidence_in_explaining,
+        data.fav_topics ?? null, // optional
+        data.notification_enabled,
+      ],
     );
     return result.rows[0];
   }

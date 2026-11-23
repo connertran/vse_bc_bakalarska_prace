@@ -1,9 +1,11 @@
 "use strict";
 
 import { Router } from "express";
-import { BadRequestError } from "../expressError";
+import { BadRequestError, ForbiddenError } from "../expressError";
 import Course from "../models/course";
+import User from "../models/user";
 import courseDataSchema from "../schemas/course/courseData.json";
+import userCourseDataSchema from "../schemas/course/userCourseData.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin } from "../middleware/auth";
 import { parseId } from "./helperFunctions";
@@ -39,6 +41,39 @@ router.get("/user/:id", ensureLoggedIn, async function (req, res, next) {
       parseId(req.params.id, "User id"),
     );
     return res.json({ courses });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+/** POST /courses/user { user_id, course_id, course_status, confidence_in_explaining,
+ *                       fav_topics (optional), notification_enabled }
+ *   => {userCourse: {user_id, course_id, course_status, confidence_in_explaining,
+ *                    fav_topics, notification_enabled}}
+ *
+ * Let user add a course to their portfolio
+ *
+ * Authorization required: the user themselves or admin
+ *
+ */
+router.post("/user", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const validator = jsonschema.validate(req.body, userCourseDataSchema);
+    if (!validator.valid) {
+      const errs = validator.errors
+        .map((e: ValidationError) => e.message)
+        .join(", ");
+      throw new BadRequestError(errs);
+    }
+
+    // user can only add courses to their OWN account
+    const user = await User.findById(req.body.user_id);
+    const isSelf = user.email === res.locals.user.email;
+    if (!isSelf && !res.locals.user.isAdmin)
+      throw new ForbiddenError("You can only change your own courses");
+
+    const userCourse = await Course.addCourseToUser(req.body);
+    return res.status(201).json({ userCourse });
   } catch (e) {
     return next(e);
   }

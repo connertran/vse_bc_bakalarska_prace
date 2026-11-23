@@ -6,6 +6,7 @@ import type {
   UserProfile,
   UserRating,
   CompletedSessions,
+  UserCourse,
 } from "./types";
 import { getTokenFromLocalStorage } from "../auth/localStorage";
 
@@ -27,8 +28,11 @@ class API {
     try {
       return (await axios({ url, method, data, params, headers })).data;
     } catch (err) {
+      if (!axios.isAxiosError(err)) throw [String(err)];
+
       console.error("API Erorr:", err.response);
-      let message = err.response.data.error.message;
+
+      const message = err.response?.data?.error?.message ?? err.message;
       throw Array.isArray(message) ? message : [message];
     }
   }
@@ -69,6 +73,12 @@ class API {
   ): Promise<CompletedSessions> {
     let res = await this.request(`sessions/users/${id}/completed`);
     return res.completed;
+  }
+
+  // Get all courses of a user by user ID
+  static async getUserCourses(id: number): Promise<UserCourse[]> {
+    let res = await this.request(`courses/user/${id}`);
+    return res.courses;
   }
 }
 export default API;

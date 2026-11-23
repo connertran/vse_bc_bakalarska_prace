@@ -1,0 +1,39 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "user_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "course_id": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "course_status": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 155
+    },
+    "confidence_in_explaining": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 5
+    },
+    "fav_topics": {
+      "type": "string",
+      "maxLength": 255
+    },
+    "notification_enabled": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "user_id",
+    "course_id",
+    "course_status",
+    "confidence_in_explaining",
+    "notification_enabled"
+  ],
+  "additionalProperties": false
+}
