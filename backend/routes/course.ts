@@ -8,7 +8,7 @@ import courseDataSchema from "../schemas/course/courseData.json";
 import userCourseDataSchema from "../schemas/course/userCourseData.json";
 import jsonschema, { type ValidationError } from "jsonschema";
 import { ensureAdmin } from "../middleware/auth";
-import { parseId } from "./helperFunctions";
+import { parseId, parseSearchText } from "./helperFunctions";
 import { ensureLoggedIn } from "../middleware/auth";
 const router = Router();
 
@@ -22,6 +22,40 @@ const router = Router();
 router.get("/", async function (req, res, next) {
   try {
     const courses = await Course.findAll();
+    return res.json({ courses });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+/** GET /courses/search/code?q=4IT101 => {courses: [{id, course_code, name, description, syllabus_URL, is_active, faculty_ID}, ...]}
+ *
+ * by default return the first 10 active courses
+ *
+ * Authorization required: logged in
+ *
+ */
+router.get("/search/code", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const q = parseSearchText(req.query.q, "Search text");
+    const courses = await Course.searchByCode(q);
+    return res.json({ courses });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+/** GET /courses/search/name?q=data structures => {courses: [{id, course_code, name, description, syllabus_URL, is_active, faculty_ID}, ...]}
+ *
+ *  by default return the first 10 active courses
+ *
+ * Authorization required: logged in
+ *
+ */
+router.get("/search/name", ensureLoggedIn, async function (req, res, next) {
+  try {
+    const q = parseSearchText(req.query.q, "Search text");
+    const courses = await Course.searchByName(q);
     return res.json({ courses });
   } catch (e) {
     return next(e);

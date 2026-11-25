@@ -7,6 +7,8 @@ import type {
   UserRating,
   CompletedSessions,
   UserCourse,
+  CourseSearchResult,
+  CourseSearchBy,
 } from "./types";
 import { getTokenFromLocalStorage } from "../auth/localStorage";
 
@@ -78,6 +80,15 @@ class API {
   // Get all courses of a user by user ID
   static async getUserCourses(id: number): Promise<UserCourse[]> {
     let res = await this.request(`courses/user/${id}`);
+    return res.courses;
+  }
+
+  // search courses by course code or by name
+  static async searchCourses(
+    q: string,
+    by: CourseSearchBy,
+  ): Promise<CourseSearchResult[]> {
+    let res = await this.request(`courses/search/${by}`, { q });
     return res.courses;
   }
 }

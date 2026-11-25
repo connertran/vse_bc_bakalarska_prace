@@ -25,11 +25,45 @@ type UserCourseData = {
 // Columns returned for every course
 const COURSE_COLUMNS = `id, course_code, name, description, syllabus_URL, is_active, faculty_ID`;
 
+function toLikePattern(text: string) {
+  return `%${text}%`;
+}
+
 class Course {
   static async findAll() {
     const result = await db.query(
       `SELECT ${COURSE_COLUMNS}
        FROM course`,
+    );
+    return result.rows;
+  }
+
+  static async searchByCode(code: string, limit = 10) {
+    const pattern = toLikePattern(code.replace(/\s+/g, ""));
+
+    const result = await db.query(
+      `SELECT ${COURSE_COLUMNS}
+       FROM course
+       WHERE is_active = TRUE
+         AND REPLACE(course_code, ' ', '') ILIKE $1
+       ORDER BY course_code
+       LIMIT $2`,
+      [pattern, limit],
+    );
+    return result.rows;
+  }
+
+  static async searchByName(name: string, limit = 10) {
+    const pattern = toLikePattern(name);
+
+    const result = await db.query(
+      `SELECT ${COURSE_COLUMNS}
+       FROM course
+       WHERE is_active = TRUE
+         AND REGEXP_REPLACE(name, '\\s+', ' ', 'g') ILIKE $1
+       ORDER BY name
+       LIMIT $2`,
+      [pattern, limit],
     );
     return result.rows;
   }

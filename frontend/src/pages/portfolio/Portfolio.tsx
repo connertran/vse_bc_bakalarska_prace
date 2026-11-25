@@ -74,7 +74,10 @@ function Portfolio() {
         isOwnProfile={data.user.id === currentUserId}
       />
       <PortfolioAbout bio={data.user.bio} />
-      <PortfolioCourses courses={data.courses} />
+      <PortfolioCourses
+        courses={data.courses}
+        isOwnProfile={data.user.id === currentUserId}
+      />
     </main>
   );
 }

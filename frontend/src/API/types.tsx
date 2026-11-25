@@ -64,7 +64,21 @@ type UserCourse = {
   notification_enabled: boolean;
 };
 
+type CourseSearchResult = {
+  id: number;
+  course_code: string;
+  name: string;
+  description: string | null;
+  syllabus_url: string;
+  is_active: boolean;
+  faculty_id: number;
+};
+
+type CourseSearchBy = "code" | "name";
+
 export type {
+  CourseSearchResult,
+  CourseSearchBy,
   UserCourse,
   UserLoginData,
   UserRegisterData,

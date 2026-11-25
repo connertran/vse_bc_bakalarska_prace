@@ -1,16 +1,19 @@
 import { useState } from "react";
 import type { UserCourse } from "../../API/types";
+import AddCoursePopUp from "./AddCoursePopUp";
 
 type PortfolioCoursesProps = {
   courses: UserCourse[];
+  isOwnProfile: boolean;
 };
 
 // default # of courses visible
 // if user wants to see more, press "Show more"
 const COURSES_PREVIEW_COUNT = 4;
 
-function PortfolioCourses({ courses }: PortfolioCoursesProps) {
+function PortfolioCourses({ courses, isOwnProfile }: PortfolioCoursesProps) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [isPopUpOpen, setIsPopUpOpen] = useState(false);
 
   const visibleCourses = isExpanded
     ? courses
@@ -19,7 +22,15 @@ function PortfolioCourses({ courses }: PortfolioCoursesProps) {
 
   return (
     <section className="portfolio-courses">
-      <h2>Related Courses</h2>
+      <div className="portfolio-courses-header">
+        <h2>Related Courses</h2>
+
+        {isOwnProfile && (
+          <button type="button" onClick={() => setIsPopUpOpen(true)}>
+            Add course
+          </button>
+        )}
+      </div>
 
       {courses.length === 0 && <p>No courses added yet.</p>}
 
@@ -45,6 +56,8 @@ function PortfolioCourses({ courses }: PortfolioCoursesProps) {
           {isExpanded ? "Show less" : "Show more"}
         </button>
       )}
+
+      {isPopUpOpen && <AddCoursePopUp onClose={() => setIsPopUpOpen(false)} />}
     </section>
   );
 }
